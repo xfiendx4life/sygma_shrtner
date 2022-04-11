@@ -69,6 +69,12 @@ def to_real_url(shortened):
     raw = storage.get(sh, "/")
     return redirect(raw)
 
+def check_user(name:str) -> bool:
+    '''Checks if user in storage. Returns True if it is'''
+    for k, v in users_storage.items():
+        if name == v['name']:
+            return True
+    return False
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -76,14 +82,18 @@ def login():
         name = request.form.get("name")
         password = request.form.get("password")
         log = request.form.get("btn_ok")
+        id = None
         if log is not None:
             id = auth_user(name, password)
             if id == None:
                 flash("Неверный логин или пароль", "warning")
         else:
-            id = gen_id()
-            u = User(id, name, password)
-            users_storage[id] = u.to_dict()
+            if not check_user(name):
+                id = gen_id()
+                u = User(id, name, password)
+                users_storage[id] = u.to_dict()
+            else:
+                flash('Такой пользователь уже существует', "warning")
         if id != None:
             session["id"] = id
             session["name"] = name
