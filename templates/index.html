@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+    {% block content %}
+        <h2 class="shrtnr-h2">Для того, чтобы сократить URL нужно просто ...</h2>
+        <form method="post">
+            <input type="text" name="origin" class="origin" placeholder="Введите url">
+            <div class="buttons">
+                <input type="submit" value="OK" name="btn-ok" class="btn btn-primary">
+            </div>
+        </form>
+        {% if shortened != '' %} 
+            <div class="shortened-div">
+                <p>Сокращенная ссылка: <a href="{{shortened}}">{{shortened}}</a></p>
+                <p>Статистика по ссылке: </p>
+            </div>
+        {% endif %}
+    {% endblock %}

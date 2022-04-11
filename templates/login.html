@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+    {% block content %}
+        <h2 class="shrtnr-h2">Войдите или зарегистрируйтесь</h2>
+        <form method="post">
+            <input type="text" name="name" class="form-control origin" placeholder="Ваш логин">
+            <input type="password" name="password" class="form-control origin" placeholder="Введите пароль">
+            <div class="buttons">
+                <input type="submit" value="Войти" name="btn_ok" class="btn btn-primary">
+                <input type="submit" value="Зарегистрироваться" name="btn_ok_reg" class="btn btn-secondary">
+            </div>
+            
+        </form>
+    {% endblock %}
