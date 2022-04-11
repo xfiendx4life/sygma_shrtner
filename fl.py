@@ -1,13 +1,27 @@
-from flask import Flask, session, render_template, request, escape, redirect, url_for, flash
+from flask import (
+    Flask,
+    session,
+    render_template,
+    request,
+    escape,
+    redirect,
+    url_for,
+    flash,
+)
 from gen import *
 from models import *
 from storage import *
 
 app = Flask(__name__)
 app.secret_key = "secret_key"
+USER_STORAGE = "./users_storage.json"
+STORAGE = "./storage.json"
+STATS_STORAGE = "./stats_storage.json"
 
-get_users_from_storage()
-get_data_from_storage()
+get_data_from_storage(USER_STORAGE, users_storage)
+get_data_from_storage(STORAGE, storage)
+get_data_from_storage(STATS_STORAGE, stats_storage)
+
 
 def get_user_by_name(name):
     for v in users_storage.values():
@@ -45,7 +59,7 @@ def index():
         raw = request.form.get("origin")
         shortened = generate(raw)
         storage[shortened] = raw
-        store_data()
+        store_data(STORAGE, storage)
     return render_template("index.html", shortened=shortened)
 
 
@@ -73,7 +87,7 @@ def login():
         if id != None:
             session["id"] = id
             session["name"] = name
-            store_users()
+            store_data(USER_STORAGE, users_storage)
             return redirect(url_for("index"))
     return render_template("login.html")
 
