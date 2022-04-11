@@ -7,7 +7,7 @@ app = Flask(__name__)
 app.secret_key = "secret_key"
 
 get_users_from_storage()
-# TODO: Вызвать фукнцию чтения из базы данных
+get_data_from_storage()
 
 def get_user_by_name(name):
     for v in users_storage.values():
@@ -45,7 +45,7 @@ def index():
         raw = request.form.get("origin")
         shortened = generate(raw)
         storage[shortened] = raw
-        # TODO: Вызвать функцию для записи данных в файл
+        store_data()
     return render_template("index.html", shortened=shortened)
 
 
