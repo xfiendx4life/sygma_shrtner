@@ -10,7 +10,7 @@
         {% if shortened != '' %} 
             <div class="shortened-div">
                 <!-- TODO: Сменить ссылку на полный путь  -->
-                <p>Сокращенная ссылка: <a href="/shrt/{{shortened}}">{{shortened}}</a></p>
+                <p>Сокращенная ссылка: <a href="/shrt/{{shortened}}">{{ url_for(request.endpoint) }}/{{shortened}}</a></p>
                 <p>Статистика по ссылке: <a href="/shrt/{{shortened}}/stats">{{shortened}}/stats</a></p></p>
             </div>
         {% endif %}

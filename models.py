@@ -21,6 +21,7 @@ class User:
 
 
 class Stats:
+    # TODO: Добавить инициализацию объекта из словаря
     def __init__(self, shortened: str) -> None:
         self.shortened = shortened
         self.redirects = 0
