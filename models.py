@@ -27,15 +27,14 @@ class Stats:
 
     def add_redirect(self):
         self.redirects += 1
-    
+
     def last_redirect(self):
         self.last_rdr = datetime.now()
-    
+
     def to_dict(self):
         return {
             self.shortened: {
-                'last_redirect': self.last_rdr,
-                'redirects': self.redirects
+                "last_redirect": self.last_rdr,
+                "redirects": self.redirects,
             }
         }
-
