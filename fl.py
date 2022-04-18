@@ -1,3 +1,4 @@
+from gc import get_stats
 from flask import (
     Flask,
     session,
@@ -63,10 +64,24 @@ def index():
     return render_template("index.html", shortened=shortened)
 
 
+def get_stats(shortened:str):
+    get_data_from_storage(STATS_STORAGE, stats_storage)
+    data = stats_storage.get(shortened, {})
+    return data
+
+def set_stats(shortened:str, data: dict):
+    stats_storage[shortened] = data
+    store_data(STATS_STORAGE, stats_storage)
+
 @app.route("/<shortened>")
 def to_real_url(shortened):
     sh = escape(shortened)
     raw = storage.get(sh, "/")
+    data = get_stats(shortened)
+    data['last_redirect'] = datetime.now().strftime("%d.%m.%y")
+    data['redirects'] = data.get('redirects', 0) + 1
+    set_stats(shortened, data)
+    store_data(STATS_STORAGE, stats_storage)
     return redirect(raw)
 
 def check_user(name:str) -> bool:

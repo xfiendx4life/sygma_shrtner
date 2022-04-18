@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from flask import redirect
+
 
 class User:
     def __init__(self, id, name, password) -> None:
@@ -21,7 +23,19 @@ class User:
 class Stats:
     def __init__(self, shortened: str) -> None:
         self.shortened = shortened
-        self.redirects = []
+        self.redirects = 0
 
     def add_redirect(self):
-        self.redirects.append(datetime.now())
+        self.redirects += 1
+    
+    def last_redirect(self):
+        self.last_rdr = datetime.now()
+    
+    def to_dict(self):
+        return {
+            self.shortened: {
+                'last_redirect': self.last_rdr,
+                'redirects': self.redirects
+            }
+        }
+
