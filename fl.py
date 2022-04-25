@@ -1,3 +1,4 @@
+from gc import get_stats
 from flask import (
     Flask,
     session,
@@ -63,18 +64,35 @@ def index():
     return render_template("index.html", shortened=shortened)
 
 
-@app.route("/<shortened>")
+def get_stats(shortened: str):
+    get_data_from_storage(STATS_STORAGE, stats_storage)
+    data = stats_storage.get(shortened, {})
+    return data
+
+
+def set_stats(shortened: str, data: dict):
+    stats_storage[shortened] = data
+    store_data(STATS_STORAGE, stats_storage)
+
+
+@app.route("/shrt/<shortened>/")
 def to_real_url(shortened):
     sh = escape(shortened)
     raw = storage.get(sh, "/")
+    data = Stats(shortened, get_stats(shortened))
+    data.add_redirect()
+    data.last_redirect()
+    set_stats(shortened, data.to_dict())
     return redirect(raw)
 
-def check_user(name:str) -> bool:
-    '''Checks if user in storage. Returns True if it is'''
+
+def check_user(name: str) -> bool:
+    """Checks if user in storage. Returns True if it is"""
     for k, v in users_storage.items():
-        if name == v['name']:
+        if name == v["name"]:
             return True
     return False
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -93,13 +111,19 @@ def login():
                 u = User(id, name, password)
                 users_storage[id] = u.to_dict()
             else:
-                flash('Такой пользователь уже существует', "warning")
+                flash("Такой пользователь уже существует", "warning")
         if id != None:
             session["id"] = id
             session["name"] = name
             store_data(USER_STORAGE, users_storage)
             return redirect(url_for("index"))
     return render_template("login.html")
+
+
+@app.route("/shrt/<shortened>/stats")
+def stats_handler(shortened):
+    d = get_stats(shortened)
+    return render_template("stats.html", data=d)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+    <table class="table">
+        <tr>
+            <td>Последний переход</td>
+            <td>{{data['last_redirect']}}</td>
+        </tr>
+        <tr>
+            <td>Количество переходов</td>
+            <td>{{data['redirects']}}</td>
+        </tr>
+    </table>
+{% endblock %}

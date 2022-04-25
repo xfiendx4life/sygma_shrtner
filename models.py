@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from flask import redirect
+
 
 class User:
     def __init__(self, id, name, password) -> None:
@@ -19,9 +21,23 @@ class User:
 
 
 class Stats:
-    def __init__(self, shortened: str) -> None:
+    # TODO: Добавить инициализацию объекта из словаря
+    def __init__(self, shortened: str = "", d: dict = {}) -> None:
         self.shortened = shortened
-        self.redirects = []
+        if d == {}:
+            self.redirects = 0
+        else:
+            self.redirects = d["redirects"]
+            self.last_rdr = datetime.strptime(d["last_redirect"], "%d.%m.%y")
 
     def add_redirect(self):
-        self.redirects.append(datetime.now())
+        self.redirects += 1
+
+    def last_redirect(self):
+        self.last_rdr = datetime.now()
+
+    def to_dict(self):
+        return {
+            "last_redirect": datetime.strftime(self.last_rdr, "%d.%m.%y"),
+            "redirects": self.redirects,
+        }
