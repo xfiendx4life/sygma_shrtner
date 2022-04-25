@@ -22,9 +22,13 @@ class User:
 
 class Stats:
     # TODO: Добавить инициализацию объекта из словаря
-    def __init__(self, shortened: str) -> None:
+    def __init__(self, shortened: str = "", d: dict = {}) -> None:
         self.shortened = shortened
-        self.redirects = 0
+        if d == {}:
+            self.redirects = 0
+        else:
+            self.redirects = d["redirects"]
+            self.last_rdr = datetime.strptime(d["last_redirect"], "%d.%m.%y")
 
     def add_redirect(self):
         self.redirects += 1
@@ -34,8 +38,6 @@ class Stats:
 
     def to_dict(self):
         return {
-            self.shortened: {
-                "last_redirect": self.last_rdr,
-                "redirects": self.redirects,
-            }
+            "last_redirect": datetime.strftime(self.last_rdr, "%d.%m.%y"),
+            "redirects": self.redirects,
         }

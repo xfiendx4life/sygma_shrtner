@@ -79,12 +79,10 @@ def set_stats(shortened: str, data: dict):
 def to_real_url(shortened):
     sh = escape(shortened)
     raw = storage.get(sh, "/")
-    # TODO: Заменить работу со словарем на работу с объектом 
-    data = get_stats(shortened) 
-    data["last_redirect"] = datetime.now().strftime("%d.%m.%y")
-    data["redirects"] = data.get("redirects", 0) + 1
-    set_stats(shortened, data)
-    store_data(STATS_STORAGE, stats_storage)
+    data = Stats(shortened, get_stats(shortened))
+    data.add_redirect()
+    data.last_redirect()
+    set_stats(shortened, data.to_dict())
     return redirect(raw)
 
 
